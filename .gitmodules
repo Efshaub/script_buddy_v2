@@ -1,0 +1,3 @@
+[submodule "aiscreenplay"]
+	path = aiscreenplay
+	url = https://github.com/ruvnet/aiscreenplay.git
