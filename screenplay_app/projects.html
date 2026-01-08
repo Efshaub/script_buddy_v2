@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects - Screenplay Writer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #d2d2d7;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 32px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .signout-btn {
+            background: transparent;
+            border: 1px solid #d2d2d7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6e6e73;
+            transition: all 0.2s;
+        }
+
+        .signout-btn:hover {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .new-project-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .new-project-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .project-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .project-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .project-meta {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 4px;
+        }
+
+        .project-actions {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .project-action-btn {
+            background: transparent;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #6e6e73;
+            transition: all 0.2s;
+        }
+
+        .project-action-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .project-action-btn.delete:hover {
+            border-color: #ff3b30;
+            color: #ff3b30;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+        }
+
+        .empty-subtitle {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-bottom: 30px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            margin-bottom: 20px;
+        }
+
+        .modal-input:focus {
+            outline: 2px solid #667eea;
+            outline-offset: -2px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #5568d3;
+        }
+
+        .modal-btn.secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .modal-btn.secondary:hover {
+            background: #e8e8ed;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <span class="logo">🎬</span>
+            <h1>Screenplay Writer</h1>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar"></div>
+            <span class="user-name" id="userName"></span>
+            <button class="signout-btn" onclick="signOut()">Sign Out</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="actions">
+            <h2 class="section-title">My Projects</h2>
+            <button class="new-project-btn" onclick="showNewProjectModal()">
+                <span>➕</span>
+                <span>New Project</span>
+            </button>
+        </div>
+
+        <div id="projectsGrid" class="projects-grid"></div>
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📝</div>
+            <div class="empty-title">No projects yet</div>
+            <div class="empty-subtitle">Create your first screenplay project to get started</div>
+            <button class="new-project-btn" onclick="showNewProjectModal()">
+                <span>➕</span>
+                <span>Create Project</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="newProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Create New Project</div>
+            <input
+                type="text"
+                id="projectNameInput"
+                class="modal-input"
+                placeholder="Enter project name..."
+                onkeypress="if(event.key === 'Enter') createProject()"
+            >
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeNewProjectModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="createProject()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'index.html';
+        }
+
+        // Display user info
+        document.getElementById('userName').textContent = user.name;
+        const avatarEl = document.getElementById('userAvatar');
+        if (user.picture && user.picture.startsWith('http')) {
+            avatarEl.innerHTML = `<img src="${user.picture}" alt="${user.name}">`;
+        } else if (user.picture) {
+            avatarEl.textContent = user.picture;
+        } else {
+            avatarEl.textContent = user.name.charAt(0).toUpperCase();
+        }
+
+        // Get projects from localStorage
+        function getProjects() {
+            const projects = localStorage.getItem('projects');
+            return projects ? JSON.parse(projects) : [];
+        }
+
+        // Save projects to localStorage
+        function saveProjects(projects) {
+            localStorage.setItem('projects', JSON.stringify(projects));
+        }
+
+        // Display projects
+        function displayProjects() {
+            const projects = getProjects();
+            const projectsGrid = document.getElementById('projectsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (projects.length === 0) {
+                projectsGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            projectsGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            projectsGrid.innerHTML = projects.map((project, index) => `
+                <div class="project-card">
+                    <div class="project-icon">🎬</div>
+                    <div class="project-name">${project.name}</div>
+                    <div class="project-meta">Created: ${new Date(project.created).toLocaleDateString()}</div>
+                    <div class="project-meta">Modified: ${new Date(project.modified).toLocaleDateString()}</div>
+                    <div class="project-meta">${project.wordCount || 0} words</div>
+                    <div class="project-actions">
+                        <button class="project-action-btn" onclick="openProject(${index})">✏️ Open</button>
+                        <button class="project-action-btn" onclick="duplicateProject(${index})">📋 Duplicate</button>
+                        <button class="project-action-btn delete" onclick="deleteProject(${index})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show new project modal
+        function showNewProjectModal() {
+            document.getElementById('newProjectModal').style.display = 'block';
+            document.getElementById('projectNameInput').focus();
+        }
+
+        // Close new project modal
+        function closeNewProjectModal() {
+            document.getElementById('newProjectModal').style.display = 'none';
+            document.getElementById('projectNameInput').value = '';
+        }
+
+        // Create new project
+        function createProject() {
+            const nameInput = document.getElementById('projectNameInput');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('Please enter a project name');
+                return;
+            }
+
+            const projects = getProjects();
+            const newProject = {
+                name: name,
+                created: new Date().toISOString(),
+                modified: new Date().toISOString(),
+                content: '',
+                wordCount: 0
+            };
+
+            projects.push(newProject);
+            saveProjects(projects);
+
+            closeNewProjectModal();
+            displayProjects();
+
+            // Open the new project
+            openProject(projects.length - 1);
+        }
+
+        // Open project
+        function openProject(index) {
+            localStorage.setItem('currentProjectIndex', index);
+            window.location.href = 'editor.html';
+        }
+
+        // Duplicate project
+        function duplicateProject(index) {
+            const projects = getProjects();
+            const original = projects[index];
+
+            const duplicate = {
+                name: original.name + ' (Copy)',
+                created: new Date().toISOString(),
+                modified: new Date().toISOString(),
+                content: original.content,
+                wordCount: original.wordCount
+            };
+
+            projects.push(duplicate);
+            saveProjects(projects);
+            displayProjects();
+        }
+
+        // Delete project
+        function deleteProject(index) {
+            const projects = getProjects();
+            const project = projects[index];
+
+            if (confirm(`Are you sure you want to delete "${project.name}"?`)) {
+                projects.splice(index, 1);
+                saveProjects(projects);
+                displayProjects();
+            }
+        }
+
+        // Sign out
+        function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('user');
+                localStorage.removeItem('currentProjectIndex');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('newProjectModal');
+            if (event.target === modal) {
+                closeNewProjectModal();
+            }
+        }
+
+        // Initial display
+        displayProjects();
+    </script>
+</body>
+</html>
